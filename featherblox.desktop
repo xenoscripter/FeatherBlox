@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=FeatherBlox
+Comment=Lightweight OpenGL 2.1 sandbox client
+Exec=featherblox
+Icon=featherblox
+Terminal=false
+Type=Application
+Categories=Game;
