@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=FeatherBlox
-Comment=Lightweight OpenGL 2.1 sandbox client
+Comment=Lightweight Roblox launcher using Cordial
 Exec=featherblox
 Icon=featherblox
 Terminal=false
