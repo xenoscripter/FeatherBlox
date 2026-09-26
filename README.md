@@ -1,73 +1,54 @@
 # FeatherBlox
 
-A lightweight independent Roblox-style sandbox client designed for very old Linux hardware.
+FeatherBlox is a lightweight launcher for Roblox on Linux.
 
-## What it is
+## Roblox runtime
 
-FeatherBlox is its **own** client and game project. It does not connect to, load, or impersonate official Roblox experiences, and it does not include Roblox's proprietary engine, authentication, assets, or networking.
+FeatherBlox uses **Cordial** as its Roblox-compatible runtime instead of Sober. Cordial is an independent, open-source Linux Roblox runtime and launcher. It requires the Roblox Android build and does not ship Roblox itself.
 
-## Target hardware
+Cordial currently targets x86-64 Linux and Wayland; X11 is supported through Flatpak's fallback socket but is not its primary development target.
 
-- OpenGL 2.1
-- Fixed-function OpenGL
-- SDL2
-- Linux x86_64
-- Intel GM45-class integrated graphics
-- Low CPU/RAM overhead
+## Install the runtime
 
-## Build on Debian/Ubuntu/MX Linux
-
-Install dependencies:
+Install Flatpak if needed:
 
 ```bash
 sudo apt update
-sudo apt install build-essential libsdl2-dev libglu1-mesa-dev
+sudo apt install flatpak
 ```
 
-Build and run:
+Add Cordial's Flatpak remote:
 
 ```bash
-./build.sh
-./build/featherblox
+flatpak remote-add --if-not-exists cordial https://luohoa97.github.io/cordial/cordial.flatpakrepo
+flatpak install cordial io.github.luohoa97.Cordial
 ```
 
-Or install it into your user application menu:
-
-```sh
-sh install.sh
-```
-
-Then run:
+Then build FeatherBlox:
 
 ```bash
+chmod +x build.sh install.sh
+./install.sh
+```
+
+Run:
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
 featherblox
 ```
 
-To remove the installed copy:
+Press **Enter** in the launcher to start Cordial.
 
-```sh
-sh uninstall.sh
-```
+## Important hardware note
+
+Your eMachines E725 has Intel GM45 graphics with OpenGL 2.1. Current Roblox Linux runtimes have substantially higher graphics/runtime requirements than the old FeatherBlox OpenGL 2.1 prototype. Cordial/Sober compatibility therefore cannot be guaranteed on this laptop.
+
+FeatherBlox does not bypass Roblox security or Hyperion. It simply provides a lightweight launcher around the installed runtime.
 
 ## Controls
 
-- **WASD** — move
-- **Mouse** — look
-- **Space** — move up
-- **Ctrl** — move down
-- **Shift** — move faster
+- **Enter** — launch Roblox through Cordial
+- **C** — check runtime installation
+- **I** — show installation commands
 - **Esc** — quit
-
-## Current client
-
-The current prototype renders a small low-poly sandbox using legacy OpenGL calls so it can target older GPUs such as Intel GM45.
-
-## Roadmap
-
-- Chunked voxel renderer
-- Local maps
-- Lua scripting
-- Lightweight multiplayer client/server
-- Custom asset format
-- Low-end graphics presets
-- Configurable resolution and FPS cap
