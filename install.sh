@@ -15,6 +15,8 @@ fi
 ./build.sh
 mkdir -p "${APP_DIR}/bin" "${BIN_DIR}" "${APP_MENU}" "${ICON_DIR}"
 cp build/featherblox "${APP_DIR}/bin/featherblox"
+cp feathercordial/launch.sh "${APP_DIR}/bin/feathercordial-launch"
+chmod +x "${APP_DIR}/bin/feathercordial-launch"
 cp featherblox.desktop "${APP_MENU}/featherblox.desktop"
 cp featherblox.svg "${ICON_DIR}/featherblox.svg"
 
