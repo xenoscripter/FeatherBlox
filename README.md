@@ -1,30 +1,38 @@
-# FeatherBlox
+# FeatherBlox 2
 
-FeatherBlox is a lightweight launcher for Roblox on Linux.
+A fresh FeatherBlox launcher for old Linux PCs.
+
+## Target hardware
+
+Designed around low-end x86-64 systems such as the eMachines E725:
+- Intel Pentium Dual-Core T4400
+- Intel GM45 integrated graphics
+- OpenGL 2.1 host graphics
+- No Vulkan dependency in FeatherBlox itself
 
 ## Roblox runtime
 
-FeatherBlox uses **Cordial** as its Roblox-compatible runtime instead of Sober. Cordial is an independent, open-source Linux Roblox runtime and launcher. It requires the Roblox Android build and does not ship Roblox itself.
+FeatherBlox 2 uses Cordial as the Roblox-compatible runtime. Cordial runs the official Roblox Android build natively on Linux and supports an OpenGL ES graphics path; Vulkan is an optional renderer path in Cordial, not a required renderer for the Roblox client.
 
-Cordial currently targets x86-64 Linux and Wayland; X11 is supported through Flatpak's fallback socket but is not its primary development target.
+FeatherBlox does not ship Roblox, bypass Roblox security, or modify Roblox. You must obtain the Roblox Android build through Cordial's normal setup.
 
-## Install the runtime
+## Install
 
-Install Flatpak if needed:
+On Ubuntu/Mint/Debian-based Linux:
 
 ```bash
 sudo apt update
-sudo apt install flatpak
+sudo apt install flatpak build-essential libsdl2-dev
 ```
 
-Add Cordial's Flatpak remote:
+Install Cordial:
 
 ```bash
 flatpak remote-add --if-not-exists cordial https://luohoa97.github.io/cordial/cordial.flatpakrepo
 flatpak install cordial io.github.luohoa97.Cordial
 ```
 
-Then build FeatherBlox:
+Build and install FeatherBlox:
 
 ```bash
 chmod +x build.sh install.sh
@@ -34,21 +42,21 @@ chmod +x build.sh install.sh
 Run:
 
 ```bash
-export PATH="$HOME/.local/bin:$PATH"
 featherblox
 ```
 
-Press **Enter** in the launcher to start Cordial.
+Press Enter to start Cordial.
 
-## Important hardware note
+## Important compatibility note
 
-Your eMachines E725 has Intel GM45 graphics with OpenGL 2.1. Current Roblox Linux runtimes have substantially higher graphics/runtime requirements than the old FeatherBlox OpenGL 2.1 prototype. Cordial/Sober compatibility therefore cannot be guaranteed on this laptop.
+The GM45 is extremely old. Your Linux Mesa stack reports OpenGL 2.1. Roblox Android officially requires at least OpenGL ES 3.0 on supported Android devices. Cordial's GLES2/EGL path is therefore the experimental path worth testing on this hardware, but this project cannot guarantee that Roblox will be playable on the E725.
 
-FeatherBlox does not bypass Roblox security or Hyperion. It simply provides a lightweight launcher around the installed runtime.
+## Goals
 
-## Controls
-
-- **Enter** — launch Roblox through Cordial
-- **C** — check runtime installation
-- **I** — show installation commands
-- **Esc** — quit
+- Lightweight launcher
+- No Vulkan dependency in FeatherBlox
+- No Wine dependency
+- No Sober dependency
+- No emulator dependency
+- Installed Cordial backend
+- Old-PC friendly
