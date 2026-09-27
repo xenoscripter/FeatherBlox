@@ -28,10 +28,11 @@ static int launch_cordial(void) {
 }
 
 static int launch_legacy_cordial(void) {
-    puts("Starting FeatherBlox Legacy T4400 Mode...");
-    puts("This uses Cordial's X11 fallback. It cannot emulate missing CPU instructions.");
+    puts("Starting FeatherBlox CPU Compatibility Mode...");
+    puts("This uses QEMU x86-64 TCG to emulate a newer virtual CPU.");
+    puts("It also forces Mesa software rendering (llvmpipe).");
     fflush(stdout);
-    return system("flatpak run --env=CORDIAL_X11=1 io.github.luohoa97.Cordial");
+    return system("sh -c 'exec \"$HOME/.local/bin/featherblox-cordial compatibility\"'");
 }
 
 static void draw_text(SDL_Renderer *ren, TTF_Font *font, const char *s, int x, int y) {
@@ -108,7 +109,7 @@ int main(void) {
     }
 
     Button launch={{70,145,280,62},"Launch Roblox"};
-    Button legacy={{370,145,280,62},"Legacy T4400 Mode"};
+    Button legacy={{370,145,280,62},"CPU Compatibility Mode"};
     Button status={{70,225,280,52},"Check Runtime"};
     Button install={{370,225,280,52},"Install Cordial"};
     Button quit={{70,300,580,52},"Quit"};
@@ -167,7 +168,7 @@ int main(void) {
                     char msg[256];
                     snprintf(
                         msg,sizeof(msg),
-                        "Flatpak: %s\nCordial: %s\nVulkan required by FeatherBlox: NO\nLegacy T4400 mode: X11 fallback only\nRoblox backend: Cordial",
+                        "Flatpak: %s\nCordial: %s\nVulkan required by FeatherBlox: NO\nCPU Compatibility mode: QEMU + llvmpipe\nRoblox backend: Cordial",
                         command_exists("flatpak") ? "available" : "missing",
                         cordial_installed() ? "installed" : "not installed"
                     );
@@ -191,7 +192,7 @@ int main(void) {
 
         SDL_Point mouse={mx,my};
         draw_text(ren,title,"FeatherBlox 2",70,45);
-        draw_text(ren,font,"Lightweight Roblox launcher - OpenGL/GLES target - no Vulkan dependency",70,90);
+        draw_text(ren,font,"Lightweight Roblox launcher - QEMU CPU compatibility + llvmpipe",70,90);
         draw_button(ren,font,&launch,SDL_PointInRect(&mouse,&launch.r));
         draw_button(ren,font,&legacy,SDL_PointInRect(&mouse,&legacy.r));
         draw_button(ren,font,&status,SDL_PointInRect(&mouse,&status.r));
