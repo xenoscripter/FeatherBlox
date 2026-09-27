@@ -1,7 +1,6 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 static int command_exists(const char *cmd)
 {
@@ -10,38 +9,36 @@ static int command_exists(const char *cmd)
     return system(test) == 0;
 }
 
-static int flatpak_app_installed(const char *app)
+static int cordial_installed(void)
 {
-    char test[512];
-    snprintf(test, sizeof(test),
-             "flatpak info %s >/dev/null 2>&1", app);
-    return system(test) == 0;
+    return system("flatpak info io.github.luohoa97.Cordial >/dev/null 2>&1") == 0;
+}
+
+static void print_install(void)
+{
+    puts("");
+    puts("Install Cordial:");
+    puts("  flatpak remote-add --if-not-exists cordial https://luohoa97.github.io/cordial/cordial.flatpakrepo");
+    puts("  flatpak install cordial io.github.luohoa97.Cordial");
+    puts("");
+}
+
+static void print_status(void)
+{
+    puts("");
+    puts("=== FeatherBlox 2 status ===");
+    printf("Flatpak: %s\n", command_exists("flatpak") ? "available" : "missing");
+    printf("Cordial: %s\n", cordial_installed() ? "installed" : "not installed");
+    puts("FeatherBlox Vulkan dependency: none");
+    puts("Roblox backend: Cordial");
+    puts("");
 }
 
 static int launch_cordial(void)
 {
-    printf("FeatherBlox Launcher: starting Cordial...\n");
+    puts("Starting Roblox through Cordial...");
     fflush(stdout);
     return system("flatpak run io.github.luohoa97.Cordial");
-}
-
-static void show_status(void)
-{
-    printf("\n=== FeatherBlox Launcher ===\n");
-    printf("Roblox runtime: Cordial\n");
-    printf("Cordial installed: %s\n",
-           flatpak_app_installed("io.github.luohoa97.Cordial") ? "yes" : "no");
-    printf("Flatpak available: %s\n",
-           command_exists("flatpak") ? "yes" : "no");
-
-    if (!command_exists("flatpak")) {
-        printf("\nInstall Flatpak first:\n");
-        printf("  sudo apt install flatpak\n");
-    } else if (!flatpak_app_installed("io.github.luohoa97.Cordial")) {
-        printf("\nInstall the Roblox-compatible runtime:\n");
-        printf("  flatpak remote-add --if-not-exists cordial https://luohoa97.github.io/cordial/cordial.flatpakrepo\n");
-        printf("  flatpak install cordial io.github.luohoa97.Cordial\n");
-    }
 }
 
 int main(void)
@@ -52,9 +49,10 @@ int main(void)
     }
 
     SDL_Window *window = SDL_CreateWindow(
-        "FeatherBlox Launcher",
+        "FeatherBlox 2",
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-        640, 360, SDL_WINDOW_SHOWN);
+        640, 360, SDL_WINDOW_SHOWN
+    );
 
     if (!window) {
         fprintf(stderr, "Window creation failed: %s\n", SDL_GetError());
@@ -63,18 +61,19 @@ int main(void)
     }
 
     SDL_Surface *surface = SDL_GetWindowSurface(window);
-    SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 18, 10, 28));
+    SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 12, 7, 20));
     SDL_UpdateWindowSurface(window);
 
-    printf("\nFeatherBlox Launcher\n");
-    printf("---------------------\n");
-    printf("[ENTER] Launch Roblox through Cordial\n");
-    printf("[I]     Show Cordial installation commands\n");
-    printf("[C]     Check runtime\n");
-    printf("[ESC]   Quit\n");
+    puts("");
+    puts("FeatherBlox 2");
+    puts("----------------");
+    puts("[ENTER] Launch Roblox");
+    puts("[C]     Check runtime");
+    puts("[I]     Installation commands");
+    puts("[ESC]   Quit");
 
     int running = 1;
-    int launch_requested = 0;
+    int launch = 0;
 
     while (running) {
         SDL_Event event;
@@ -83,18 +82,15 @@ int main(void)
                 running = 0;
             } else if (event.type == SDL_KEYDOWN) {
                 SDL_Keycode key = event.key.keysym.sym;
-
                 if (key == SDLK_ESCAPE) {
                     running = 0;
                 } else if (key == SDLK_RETURN || key == SDLK_KP_ENTER) {
-                    launch_requested = 1;
+                    launch = 1;
                     running = 0;
                 } else if (key == SDLK_c) {
-                    show_status();
+                    print_status();
                 } else if (key == SDLK_i) {
-                    printf("\nCordial installation:\n");
-                    printf("  flatpak remote-add --if-not-exists cordial https://luohoa97.github.io/cordial/cordial.flatpakrepo\n");
-                    printf("  flatpak install cordial io.github.luohoa97.Cordial\n");
+                    print_install();
                 }
             }
         }
@@ -104,18 +100,17 @@ int main(void)
     SDL_DestroyWindow(window);
     SDL_Quit();
 
-    if (!launch_requested)
+    if (!launch)
         return 0;
 
     if (!command_exists("flatpak")) {
-        fprintf(stderr, "Flatpak is not installed. Run: sudo apt install flatpak\n");
+        fprintf(stderr, "Flatpak is missing. Run: sudo apt install flatpak\n");
         return 1;
     }
 
-    if (!flatpak_app_installed("io.github.luohoa97.Cordial")) {
-        fprintf(stderr, "Cordial is not installed. Run:\n");
-        fprintf(stderr, "  flatpak remote-add --if-not-exists cordial https://luohoa97.github.io/cordial/cordial.flatpakrepo\n");
-        fprintf(stderr, "  flatpak install cordial io.github.luohoa97.Cordial\n");
+    if (!cordial_installed()) {
+        fprintf(stderr, "Cordial is not installed.\n");
+        print_install();
         return 1;
     }
 
