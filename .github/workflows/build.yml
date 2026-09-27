@@ -1,46 +1,15 @@
-name: Build FeatherBlox
+name: Build FeatherBlox 2
 
 on:
   push:
-    branches: ["main"]
   pull_request:
-  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y build-essential libsdl2-dev libglu1-mesa-dev
-
+        run: sudo apt-get update && sudo apt-get install -y build-essential libsdl2-dev
       - name: Build
         run: ./build.sh
-
-      - name: Package
-        run: |
-          mkdir -p dist/FeatherBlox/usr/bin
-          mkdir -p dist/FeatherBlox/usr/share/applications
-          mkdir -p dist/FeatherBlox/usr/share/icons/hicolor/scalable/apps
-          mkdir -p dist/FeatherBlox/DEBIAN
-          cp build/featherblox dist/FeatherBlox/usr/bin/featherblox
-          cp featherblox.desktop dist/FeatherBlox/usr/share/applications/featherblox.desktop
-          cp featherblox.svg dist/FeatherBlox/usr/share/icons/hicolor/scalable/apps/featherblox.svg
-          cat > dist/FeatherBlox/DEBIAN/control <<'EOF'
-          Package: featherblox
-          Version: 0.1.0
-          Section: games
-          Priority: optional
-          Architecture: amd64
-          Maintainer: XenoScripter
-          Depends: libsdl2-2.0-0, libglu1-mesa
-          Description: Lightweight OpenGL 2.1 FeatherBlox sandbox client
-          EOF
-          dpkg-deb --build dist/FeatherBlox featherblox_0.1.0_amd64.deb
-
-      - name: Upload Debian package
-        uses: actions/upload-artifact@v4
-        with:
-          name: featherblox-deb
-          path: featherblox_0.1.0_amd64.deb
