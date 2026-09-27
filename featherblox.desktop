@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=FeatherBlox
-Comment=Lightweight Roblox launcher using Cordial
+Name=FeatherBlox 2
+Comment=Lightweight Roblox launcher for old Linux PCs
 Exec=featherblox
 Icon=featherblox
 Terminal=false
