@@ -32,7 +32,7 @@ static int launch_legacy_cordial(void) {
     puts("This uses QEMU x86-64 TCG to emulate a newer virtual CPU.");
     puts("It also forces Mesa software rendering (llvmpipe).");
     fflush(stdout);
-    return system("sh -c 'exec \"$HOME/.local/bin/featherblox-cordial compatibility\"'");
+    return system("sh -c 'exec \"$HOME/.local/share/featherblox/bin/feathercordial-launch\" compatibility'");
 }
 
 static void draw_text(SDL_Renderer *ren, TTF_Font *font, const char *s, int x, int y) {
