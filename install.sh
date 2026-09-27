@@ -8,7 +8,7 @@ ICON_DIR="${PREFIX}/share/icons/hicolor/scalable/apps"
 
 if ! command -v cc >/dev/null 2>&1 || ! command -v sdl2-config >/dev/null 2>&1; then
   echo "Missing build dependencies."
-  echo "Run: sudo apt install build-essential libsdl2-dev"
+  echo "Run: sudo apt install build-essential libsdl2-dev libsdl2-ttf-dev"
   exit 1
 fi
 
