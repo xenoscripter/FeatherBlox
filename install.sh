@@ -19,6 +19,8 @@ cp feathercordial/launch.sh "${APP_DIR}/bin/feathercordial-launch"
 chmod +x "${APP_DIR}/bin/feathercordial-launch"
 cp featherblox.desktop "${APP_MENU}/featherblox.desktop"
 cp featherblox.svg "${ICON_DIR}/featherblox.svg"
+cp feathercordial/launch.sh "${BIN_DIR}/featherblox-cordial"
+chmod +x "${BIN_DIR}/featherblox-cordial"
 
 cat > "${BIN_DIR}/featherblox" <<EOF
 #!/bin/sh
